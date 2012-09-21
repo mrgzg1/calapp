@@ -19,8 +19,8 @@ class Application(tornado.web.Application):
             (r"/enterprise", EnterpriseHandler)
         ]
         settings = dict(
-            template_path=os.path.join(os.path.dirname(os.path.realpath(__file__)), "templates"),
-            static_path=os.path.join(os.path.dirname(os.path.realpath(__file__)), "static"),
+            template_path=os.path.join(os.path.dirname(os.path.realpath(__file__)), "files"),
+            static_path=os.path.join(os.path.dirname(os.path.realpath(__file__)), "files"),
             debug=bool(options.debug),
         )
         logging.error(settings)
