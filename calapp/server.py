@@ -16,6 +16,9 @@ class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
             (r"/", IndexHandler),
+            (r"/files/brain.js", BrainHandler),
+            (r"/files/formAjaxPlugin.js", PluginHandler),
+            (r"/files/main.css", CssHandler),
             (r"/enterprise", EnterpriseHandler)
         ]
         settings = dict(
@@ -36,7 +39,19 @@ class EnterpriseHandler(tornado.web.RequestHandler):
 class IndexHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("index.html")
-        
+
+class BrainHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("brain.js")
+
+class PluginHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("formAjaxPlugin.js")
+
+class CssHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("main.css")
+
 if __name__ == "__main__":
     # if not bool(options.debug):
     #     log = open('tornado.' + str(options.port) + '.log', 'a+')
