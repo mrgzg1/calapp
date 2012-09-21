@@ -10,4 +10,4 @@ command = python -m calapp.server
 # Note that the chat demo won't actually work in that configuration
 # because it assumes all listeners are in one process.
 numprocs = 1
-numprocs_start = 8000
+numprocs_start = 82
