@@ -10,12 +10,15 @@ from tornado.escape import json_encode
 
 from tornado.options import define, options
 define("port", default=8000, help="run on the given port", type=int)
-define("debug", default=0, help="setdebug option 0= false, 1 = true(default)", type=int)
+define("debug", default=1, help="setdebug option 0= false, 1 = true(default)", type=int)
 
 class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
             (r"/", IndexHandler),
+            (r"/files/brain.js", BrainHandler),
+            (r"/files/formAjaxPlugin.js", PluginHandler),
+            (r"/files/main.css", CssHandler),
             (r"/enterprise", EnterpriseHandler)
         ]
         settings = dict(
@@ -36,6 +39,18 @@ class EnterpriseHandler(tornado.web.RequestHandler):
 class IndexHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("index.html")
+
+class BrainHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("brain.js")
+
+class PluginHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("formAjaxPlugin.js")
+
+class CssHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("main.css")
 
 if __name__ == "__main__":
     # if not bool(options.debug):
