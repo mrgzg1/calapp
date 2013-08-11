@@ -1,5 +1,5 @@
 import mechanize
-from bs4 import BeautifulSoup
+from BeautifulSoup import BeautifulSoup
 from soupselect import select
 import logging
 import datetime
@@ -44,7 +44,7 @@ class EnterpriseBrowser(object):
         params = []
         for td in select(row_soup,"td"):
             td_soup = BeautifulSoup(str(td))
-            params.append(td_soup.get_text())
+            params.append(td_soup.text)
         return self.class_json(params)
 
     def class_json(self, lst):
@@ -143,7 +143,11 @@ class EnterpriseBrowser(object):
     #parses the time string and also takes in the start date as an argument
     #this is to return the optimal start and end for GCal
     def parse_time(self, time_str, start_date):
-                # 12:00 pm - 12:50 pm -> datetime object
+        # 12:00 pm - 12:50 pm -> datetime object
+        if time_str == "TBA":
+            start_time = datetime.datetime(start_date.year,start_date.month,start_date.day,12,0,0)
+            end_time = datetime.datetime(start_date.year,start_date.month,start_date.day,13,0,0)
+            return [start_time,end_time]
         #remove all the unneeded things and split into two
         splitted = (time_str.replace(" ","")).split("-")
         #now convert the splitted text into datetime objects

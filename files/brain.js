@@ -1,6 +1,6 @@
 
 var gcal = {
-  clientId: '526830948367',
+  clientId: '526830948367-u5oq7mbudslpl0ss20ukdot8m8mijjlq',
   apiKey: 'AIzaSyBItmgNX0SaWe5_fKVGe6BWa_R2LHXCI2o',
   scopes: 'https://www.googleapis.com/auth/calendar',
 

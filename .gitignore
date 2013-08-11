@@ -1,4 +1,19 @@
-*.py[co]
+# Ignore all the virtualenv stuff except the actual packages
+# themselves
+/bin
+/include
+/lib/python*/*
+!/lib/python*/site-packages
+
+config.py
+log.txt
+raw*.txt
+*.DS_store
+
+*.py[cod]
+*.python
+# C extensions
+*.so
 
 # Packages
 *.egg
@@ -12,6 +27,8 @@ var
 sdist
 develop-eggs
 .installed.cfg
+lib
+lib64
 
 # Installer logs
 pip-log.txt
@@ -19,9 +36,12 @@ pip-log.txt
 # Unit test / coverage reports
 .coverage
 .tox
+nosetests.xml
 
-#Translations
+# Translations
 *.mo
 
-#Mr Developer
+# Mr Developer
 .mr.developer.cfg
+.project
+.pydevproject

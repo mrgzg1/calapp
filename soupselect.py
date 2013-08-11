@@ -17,11 +17,11 @@ import re
 tag_re = re.compile('^[a-z0-9]+$')
 
 attribselect_re = re.compile(
-    r'^(?P<tag>\w+)?\[(?P<attribute>\w+)(?P<operator>[=~\|\^\$\*]?)' + 
+    r'^(?P<tag>\w+)?\[(?P<attribute>[\w-]+)(?P<operator>[=~\|\^\$\*]?)' + 
     r'=?"?(?P<value>[^\]"]*)"?\]$'
 )
 
-# /^(\w+)\[(\w+)([=~\|\^\$\*]?)=?"?([^\]"]*)"?\]$/
+# /^(\w+)\[([\w-]+)([=~\|\^\$\*]?)=?"?([^\]"]*)"?\]$/
 #   \---/  \---/\-------------/    \-------/
 #     |      |         |               |
 #     |      |         |           The value
@@ -57,7 +57,11 @@ def select(soup, selector):
     """
     tokens = selector.split()
     current_context = [soup]
-    for token in tokens:
+    for index, token in enumerate(tokens):
+        if tokens[index - 1] == '>':
+            # already found direct descendants in last step
+            continue
+
         m = attribselect_re.match(token)
         if m:
             # Attribute selector
@@ -70,6 +74,7 @@ def select(soup, selector):
                 found.extend([el for el in context.findAll(tag) if checker(el)])
             current_context = found
             continue
+
         if '#' in token:
             # ID selector
             tag, id = token.split('#', 1)
@@ -80,20 +85,24 @@ def select(soup, selector):
                 return [] # No match
             current_context = [el]
             continue
+
         if '.' in token:
             # Class selector
             tag, klass = token.split('.', 1)
             if not tag:
                 tag = True
+            classes = set(klass.split('.'))
             found = []
             for context in current_context:
                 found.extend(
                     context.findAll(tag,
-                        {'class': lambda attr: attr and klass in attr.split()}
+                        {'class': lambda attr:
+                             attr and classes.issubset(attr.split())}
                     )
                 )
             current_context = found
             continue
+
         if token == '*':
             # Star selector
             found = []
@@ -101,6 +110,19 @@ def select(soup, selector):
                 found.extend(context.findAll(True))
             current_context = found
             continue
+
+        if token == '>':
+            # Child selector
+            tag = tokens[index + 1]
+            if not tag:
+                tag = True
+
+            found = []
+            for context in current_context:
+                found.extend(context.findAll(tag, recursive=False))
+            current_context = found
+            continue
+
         # Here we should just have a regular tag
         if not tag_re.match(token):
             return []
